@@ -23,6 +23,7 @@ class DepartmentRequest extends FormRequest
     {
         return [
             'name' => 'required|max:100',
+            'compartment_id' => 'required|numeric'
         ];
     }
 
@@ -30,7 +31,9 @@ class DepartmentRequest extends FormRequest
     {
         return [
             'name.required' => 'Name is required !',
-            'name.max' => 'Name max 100 symbol !'
+            'name.max' => 'Name max 100 symbol !',
+            'compartment_id.required' => 'Compartment Required !',
+            'compartment_id.numeric' => 'Compartment type is invalid ! Integer given !'
         ];
     }
 }

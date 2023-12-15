@@ -12,7 +12,8 @@ class Departments extends Model
     protected $table = 'departments';
 
     protected $fillable = [
-        'name'
+        'name',
+        'compartment_id'
     ];
     protected $guarded = [];
 
