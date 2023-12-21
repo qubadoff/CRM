@@ -1,42 +1,38 @@
 <?php
 
-namespace App\Http\Controllers\Api\Avans;
+namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\General\AvansRequest;
-use App\Models\Avans;
+use App\Http\Requests\User\UserRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use function Symfony\Component\Translation\t;
 
-class AvansController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
     {
-        return response()->json([
-            'data' => Avans::orderBy('id', 'DESC')->withTrashed()->paginate(20)
-        ]);
+        return response()->json(['data' => User::orderBy('id', 'DESC')->withTrashed()->paginate(20)]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AvansRequest $request)
+    public function store(UserRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-
-            $avans = Avans::create(array_merge($request->validated(), ['user_id' => auth()->user()->id]));
+            $user = User::create($request->validated());
 
             DB::commit();
 
-            return response()->json(['data' => $avans]);
+            return response()->json([['data' => $user]]);
 
         } catch (\Throwable $throwable)
         {
@@ -51,34 +47,28 @@ class AvansController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        return response()->json([
-            'data' => Avans::findOrFail($id)
-        ]);
+        return response()->json(['data' => User::findOrFail($id)]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(AvansRequest $request, string $id)
+    public function update(UserUpdateRequest $request, string $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
 
-            $avans = Avans::findOrFail($id);
+            $user = User::findOrFail($id);
 
-            $avans->update($request->validated());
+            $user->update($request->validated());
 
             DB::commit();
 
-            return response()->json([
-                'data' => $avans
-            ]);
+            return response()->json(['data' => $user]);
 
         } catch (\Throwable $throwable)
         {
-            DB::rollBack();
-
             return response()->json(['error' => $throwable]);
         }
     }
@@ -91,13 +81,13 @@ class AvansController extends Controller
         DB::beginTransaction();
 
         try {
-            $avans = Avans::findOrFail($id);
+            $user = User::findOrFail($id);
 
-            $avans->delete();
+            $user->delete();
 
             DB::commit();
 
-            return response()->json(['message' => 'Avans deleted !']);
+            return response()->json(['message' => 'User deleted !']);
 
         } catch (Throwable $throwable)
         {

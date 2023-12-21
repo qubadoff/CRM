@@ -87,9 +87,9 @@ class DeductionController extends Controller
         DB::beginTransaction();
 
         try {
-            $employee = Deduction::findOrFail($id);
+            $deduction = Deduction::findOrFail($id);
 
-            $employee->delete();
+            $deduction->delete();
 
             DB::commit();
 

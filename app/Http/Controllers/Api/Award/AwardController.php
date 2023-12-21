@@ -88,9 +88,9 @@ class AwardController extends Controller
         DB::beginTransaction();
 
         try {
-            $employee = Award::findOrFail($id);
+            $award = Award::findOrFail($id);
 
-            $employee->delete();
+            $award->delete();
 
             DB::commit();
 

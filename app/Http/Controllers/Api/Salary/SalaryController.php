@@ -86,9 +86,9 @@ class SalaryController extends Controller
         DB::beginTransaction();
 
         try {
-            $employee = Salary::findOrFail($id);
+            $salary = Salary::findOrFail($id);
 
-            $employee->delete();
+            $salary->delete();
 
             DB::commit();
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\General\DepartmentController;
 use App\Http\Controllers\Api\General\PositionController;
 use App\Http\Controllers\Api\General\RatingController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\Employee\EmployeeController;
 use App\Http\Controllers\Api\Avans\AvansController;
 use App\Http\Controllers\Api\Award\AwardController;
@@ -19,6 +20,9 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    //User Controller
+    Route::apiResource('user', UserController::class);
 
     // General Controllers
    Route::apiResource('compartment', CompartmentController::class);
