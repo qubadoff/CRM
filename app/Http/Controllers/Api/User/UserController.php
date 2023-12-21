@@ -69,6 +69,7 @@ class UserController extends Controller
 
         } catch (\Throwable $throwable)
         {
+            DB::rollBack();
             return response()->json(['error' => $throwable]);
         }
     }
