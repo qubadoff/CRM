@@ -32,6 +32,7 @@ class DepartmentController extends Controller
             {
                 DB::commit();
                 return response()->json([
+                    'message' => 'Department created successfully !',
                     'data' => $data
                 ]);
             }

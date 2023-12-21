@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('compartment_id');
             $table->integer('department_id');
             $table->integer('position_id');
+            $table->integer('geometric_card_number')->nullable();
             $table->text('full_name');
             $table->text('father_name');
             $table->string("id_number");
@@ -35,7 +36,7 @@ return new class extends Migration
                 EducationEnum::UNEDUCATED->value
             );
             $table->text("school_name")->nullable();
-            $table->integer("experience")->default(0);
+            $table->integer("experience")->nullable();
             $table->tinyInteger("job_type")->default(
                 JobTypeEnum::FULL_TIME->value
             );
@@ -45,6 +46,7 @@ return new class extends Migration
             $table->time("end_time");
             $table->string("reference")->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
