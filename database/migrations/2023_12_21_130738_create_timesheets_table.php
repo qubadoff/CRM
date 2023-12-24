@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
+            $table->integer('compartment_id');
+            $table->mediumText('department_id');
+            $table->mediumText('user_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
