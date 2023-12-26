@@ -23,6 +23,7 @@ class AuthRegisterRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'brand_name' => 'required|unique:users,brand_name',
             'email' => 'required|email|unique:users,email',
             'password' => 'required'
         ];
@@ -32,6 +33,7 @@ class AuthRegisterRequest extends FormRequest
     {
         return [
             'name.required' => 'Name is required !',
+            'brand_name.required' => 'Brand Name is required !',
             'email.required' => 'Email is required !',
             'email.email' => 'Email type is invalid !',
             'password.required' => 'Password is required !'
