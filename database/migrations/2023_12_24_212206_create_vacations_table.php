@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('compartment_id');
             $table->integer('department_id');
             $table->integer('user_id');
-            $table->datetimes('vacation_date');
+            $table->dateTime('vacation_date');
             $table->tinyInteger('status')->default(VacationStatusEnum::PENDING->value);
             $table->tinyInteger('type')->default(VacationTypeEnum::WITHOUT_PERMISSION->value);
             $table->text('reason')->nullable();

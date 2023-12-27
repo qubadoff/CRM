@@ -7,8 +7,8 @@ use App\Http\Requests\User\UserRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class UserController extends Controller
 {
@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(['data' => User::orderBy('id', 'DESC')->withTrashed()->paginate(20)]);
+        return response()->json(User::orderBy('id', 'DESC')->withTrashed()->paginate(20));
     }
 
     /**
@@ -32,13 +32,13 @@ class UserController extends Controller
 
             DB::commit();
 
-            return response()->json([['data' => $user]]);
+            return response()->json($user);
 
-        } catch (\Throwable $throwable)
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
 
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 
@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        return response()->json(['data' => User::findOrFail($id)]);
+        return response()->json(User::findOrFail($id));
     }
 
     /**
@@ -59,18 +59,17 @@ class UserController extends Controller
 
         try {
 
-            $user = User::findOrFail($id);
-
-            $user->update($request->validated());
+            $user = User::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json(['data' => $user]);
+            return response()->json($user);
 
-        } catch (\Throwable $throwable)
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json(['error' => $throwable]);
+
+            return response()->json($throwable);
         }
     }
 
@@ -82,9 +81,7 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            $user = User::findOrFail($id);
-
-            $user->delete();
+            User::findOrFail($id)->delete();
 
             DB::commit();
 
@@ -93,7 +90,8 @@ class UserController extends Controller
         } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json(['error' => $throwable]);
+
+            return response()->json($throwable);
         }
     }
 }

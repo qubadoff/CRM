@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('compartment_id');
             $table->mediumText('department_id');
             $table->mediumText('user_id');
+            $table->dateTime('date_time');
             $table->timestamps();
             $table->softDeletes();
         });

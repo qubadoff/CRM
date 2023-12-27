@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\General\DeductionRequest;
 use App\Models\Deduction;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class DeductionController extends Controller
 {
@@ -16,9 +16,7 @@ class DeductionController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json([
-            'data' => Deduction::orderBy('id', 'DESC')->withTrashed()->paginate(20)
-        ]);
+        return response()->json(Deduction::orderBy('id', 'DESC')->withTrashed()->paginate(20));
     }
 
     /**
@@ -34,13 +32,13 @@ class DeductionController extends Controller
 
             DB::commit();
 
-            return response()->json(['data' => $deduction]);
+            return response()->json($deduction);
 
-        } catch (\Throwable $throwable)
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
 
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 
@@ -49,29 +47,25 @@ class DeductionController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        return response()->json(['data' => Deduction::findOrFail($id)]);
+        return response()->json(Deduction::findOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(DeductionRequest $request, string $id): JsonResponse
+    public function update(DeductionRequest $request, int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
 
-            $deduction = Deduction::findOrFail($id);
-
-            $deduction->update($request->validated());
+            $deduction = Deduction::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json([
-                'data' => $deduction
-            ]);
+            return response()->json($deduction);
 
-        } catch (\Throwable $throwable)
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
 
@@ -82,14 +76,13 @@ class DeductionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            $deduction = Deduction::findOrFail($id);
 
-            $deduction->delete();
+            Deduction::findOrFail($id)->delete();
 
             DB::commit();
 
@@ -98,7 +91,7 @@ class DeductionController extends Controller
         } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 }

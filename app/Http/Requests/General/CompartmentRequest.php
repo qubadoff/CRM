@@ -28,19 +28,4 @@ class CompartmentRequest extends FormRequest
             'employee_count' => 'required|numeric|max:100',
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'name.required' => 'Name is required !',
-            'name.max' => 'Name max 150 symbol !',
-            'category.required' => 'Category is required !',
-            'category.max' => 'Category max 150 symbol !',
-            'voen.required' => 'VOEN is required !',
-            'voen.max' => 'VOEN max 100 symbol !',
-            'employee_count.required' => 'Employee count is required !',
-            'employee_count.numeric' => 'Employee count invalid data type !',
-            'employee_count.max' => 'Employee Count max 100 symbol !'
-        ];
-    }
 }

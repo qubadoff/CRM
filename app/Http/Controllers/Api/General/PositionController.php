@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\General\PositionRequest;
 use App\Models\Position;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class PositionController extends Controller
 {
@@ -16,76 +16,68 @@ class PositionController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json([
-            'data' => Position::paginate(15)
-        ]);
+        return response()->json(Position::paginate(15));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PositionRequest $request)
+    public function store(PositionRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            if ($data = Position::create($request->validated()))
-            {
-                DB::commit();
-                return response()->json([
-                    'data' => $data
-                ]);
-            }
-        } catch (\Throwable $throwable)
+            $position = Position::create($request->validated());
+
+            DB::commit();
+
+            return response()->json($position);
+
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json([
-                'errors' => $throwable
-            ]);
+
+            return response()->json($throwable);
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        return response()->json([
-            'data' => Position::where('id', $id)->first()
-        ]);
+        return response()->json(Position::where('id', $id)->first());
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PositionRequest $request, string $id)
+    public function update(PositionRequest $request, int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            if (Position::where('id', $id)->update($request->validated()))
-            {
-                DB::commit();
-                return response()->json([
-                    'message' => 'Successfully Updated !',
-                    'data' => Position::where('id', $id)->first()
-                ]);
-            }
-        } catch (\Throwable $throwable)
+
+            Position::findOrFail($id)->update($request->validated());
+
+            DB::commit();
+
+            return response()->json(Position::where('id', $id)->first());
+
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json([
-                'errors' => $throwable
-            ]);
+
+            return response()->json($throwable);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id): JsonResponse
     {
-        Position::where('id', $id)->delete();
+        Position::findOrFail($id)->delete();
 
         return response()->json([
             'message' => 'Successfully Deleted !'

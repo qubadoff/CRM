@@ -18,15 +18,13 @@ class AvansController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json([
-            'data' => Avans::orderBy('id', 'DESC')->withTrashed()->paginate(20)
-        ]);
+        return response()->json(Avans::orderBy('id', 'DESC')->withTrashed()->paginate(20));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AvansRequest $request)
+    public function store(AvansRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
@@ -36,64 +34,56 @@ class AvansController extends Controller
 
             DB::commit();
 
-            return response()->json(['data' => $avans]);
+            return response()->json($avans);
 
         } catch (\Throwable $throwable)
         {
             DB::rollBack();
 
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        return response()->json([
-            'data' => Avans::findOrFail($id)
-        ]);
+        return response()->json(Avans::findOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(AvansRequest $request, string $id)
+    public function update(AvansRequest $request, int $id)
     {
         DB::beginTransaction();
 
         try {
 
-            $avans = Avans::findOrFail($id);
-
-            $avans->update($request->validated());
+            $avans = Avans::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json([
-                'data' => $avans
-            ]);
+            return response()->json($avans);
 
         } catch (\Throwable $throwable)
         {
             DB::rollBack();
 
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            $avans = Avans::findOrFail($id);
-
-            $avans->delete();
+            $avans = Avans::findOrFail($id)->delete();
 
             DB::commit();
 
@@ -102,7 +92,7 @@ class AvansController extends Controller
         } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 }

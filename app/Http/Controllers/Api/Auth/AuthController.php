@@ -9,9 +9,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Throwable;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -48,7 +46,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(AuthRegisterRequest $request)
+    public function register(AuthRegisterRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
@@ -75,8 +73,8 @@ class AuthController extends Controller
             ]);
         } catch (Throwable $throwable) {
             DB::rollBack();
-            report($throwable);
-            return false;
+
+            return response()->json(['error' => $throwable]);
         }
     }
 }

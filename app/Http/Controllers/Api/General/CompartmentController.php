@@ -7,6 +7,7 @@ use App\Http\Requests\General\CompartmentRequest;
 use App\Models\Compartment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CompartmentController extends Controller
 {
@@ -15,79 +16,67 @@ class CompartmentController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json([
-            'data' => Compartment::paginate(15)
-        ]);
+        return response()->json(Compartment::paginate(15));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CompartmentRequest $request)
+    public function store(CompartmentRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            if ($data = Compartment::create($request->validated()))
-            {
+            $compartment = Compartment::create($request->validated());
                 DB::commit();
 
-                return response()->json([
-                    'data' => $data
-                ]);
-            }
+                return response()->json($compartment);
 
         } catch (\Throwable $throwable)
         {
-            DB::rollBack()
-            ;
-            return response()->json([
-                'errors' => $throwable
-            ]);
+            DB::rollBack();
+
+            return response()->json($throwable);
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        return response()->json([
-            'data' => $compartment = Compartment::where('id', $id)->first()
-        ]);
+        return response()->json(Compartment::where('id', $id)->first());
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CompartmentRequest $request, string $id)
+    public function update(CompartmentRequest $request, int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            if (Compartment::where('id', $id)->update($request->validated()))
-            {
-                DB::commit();
-                return response()->json([
-                    'message' => 'Successfully Updated !',
-                    'data' => Compartment::where('id', $id)->first()
-                ]);
-            }
-        } catch (\Throwable $throwable)
+
+            Compartment::findOrFail($id)->update($request->validated());
+
+            DB::commit();
+
+            return response()->json(Compartment::where('id', $id)->first());
+
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json([
-                'errors' => $throwable
-            ]);
+
+            return response()->json($throwable);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        Compartment::where('id', $id)->delete();
+        Compartment::findOrFail($id)->delete();
 
         return response()->json([
             'message' => 'Successfully Deleted !'

@@ -61,9 +61,7 @@ class EmployeeController extends Controller
         {
             DB::rollBack();
 
-            return response()->json([
-                'error' => $throwable
-            ]);
+            return response()->json($throwable);
         }
     }
 
@@ -90,7 +88,7 @@ class EmployeeController extends Controller
             compact('userPhotoUrl', 'documents')
         );
 
-        return response()->json(['data' => $employeeData]);
+        return response()->json($employeeData);
     }
 
     public function update(EmployeeupdateRequest $request, $id): JsonResponse
@@ -126,7 +124,7 @@ class EmployeeController extends Controller
                 compact('userPhotoUrl', 'documents')
             );
 
-            return response()->json(['data' => $employeeData]);
+            return response()->json($employeeData);
         } catch (Throwable $e) {
 
             DB::rollBack();
@@ -135,14 +133,12 @@ class EmployeeController extends Controller
         }
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            $employee = Employee::findOrFail($id);
-
-            $employee->delete();
+            $employee = Employee::findOrFail($id)->delete();
 
             DB::commit();
 
@@ -151,7 +147,7 @@ class EmployeeController extends Controller
         } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\General\SalaryRequest;
 use App\Models\Salary;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class SalaryController extends Controller
 {
@@ -15,9 +16,7 @@ class SalaryController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json([
-            'data' => Salary::orderBy('id', 'DESC')->withTrashed()->paginate(20)
-        ]);
+        return response()->json(Salary::orderBy('id', 'DESC')->withTrashed()->paginate(20));
     }
 
     /**
@@ -33,16 +32,14 @@ class SalaryController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'data' => $salary
-            ]);
+            return response()->json($salary);
 
 
-        } catch (\Throwable $throwable)
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
 
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 
@@ -51,44 +48,40 @@ class SalaryController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        return response()->json(['data' => Salary::findOrFail($id) ]);
+        return response()->json(Salary::findOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(SalaryRequest $request, string $id)
+    public function update(SalaryRequest $request, int $id)
     {
         DB::beginTransaction();
 
         try {
 
-            $salary = Salary::findOrFail($id);
-
-            $salary->update($request->validated());
+            $salary = Salary::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json(['data' => $salary]);
+            return response()->json($salary);
 
-        } catch (\Throwable $throwable)
+        } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            $salary = Salary::findOrFail($id);
-
-            $salary->delete();
+            Salary::findOrFail($id)->delete();
 
             DB::commit();
 
@@ -97,7 +90,8 @@ class SalaryController extends Controller
         } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json(['error' => $throwable]);
+
+            return response()->json($throwable);
         }
     }
 }

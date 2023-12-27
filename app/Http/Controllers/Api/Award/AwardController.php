@@ -7,6 +7,7 @@ use App\Http\Requests\General\AwardRequest;
 use App\Models\Award;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class AwardController extends Controller
 {
@@ -15,9 +16,7 @@ class AwardController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json([
-            'data' => Award::withTrashed()->orderBy('id', 'DESC')->paginate(20)
-        ]);
+        return response()->json(Award::withTrashed()->orderBy('id', 'DESC')->paginate(20));
     }
 
     /**
@@ -33,15 +32,13 @@ class AwardController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'data' => $award
-            ]);
+            return response()->json($award);
 
         } catch (\Throwable $throwable)
         {
             DB::rollBack();
 
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 
@@ -50,47 +47,39 @@ class AwardController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        return response()->json([
-            'data' => Award::findOrFail($id)
-        ]);
+        return response()->json(Award::findOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(AwardRequest $request, string $id): JsonResponse
+    public function update(AwardRequest $request, int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
 
-            $award = Award::findOrFail($id);
-
-            $award->update($request->validated());
+            $award = Award::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json([
-                'data' => $award
-            ]);
+            return response()->json($award);
 
         } catch (\Throwable $throwable)
         {
-            return response()->json(['error' => $throwable]);
+            return response()->json( $throwable );
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
-            $award = Award::findOrFail($id);
-
-            $award->delete();
+            Award::findOrFail($id)->delete();
 
             DB::commit();
 
@@ -99,7 +88,7 @@ class AwardController extends Controller
         } catch (Throwable $throwable)
         {
             DB::rollBack();
-            return response()->json(['error' => $throwable]);
+            return response()->json($throwable);
         }
     }
 }
