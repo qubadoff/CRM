@@ -17,12 +17,13 @@ return new class extends Migration
             $table->id();
             $table->integer('compartment_id');
             $table->integer('department_id');
-            $table->integer('user_id');
+            $table->integer('employee_id');
             $table->dateTime('vacation_date');
             $table->tinyInteger('status')->default(VacationStatusEnum::PENDING->value);
             $table->tinyInteger('type')->default(VacationTypeEnum::WITHOUT_PERMISSION->value);
             $table->text('reason')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

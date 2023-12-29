@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Avans\AvansController;
 use App\Http\Controllers\Api\Award\AwardController;
 use App\Http\Controllers\Api\Deduction\DeductionController;
 use App\Http\Controllers\Api\Salary\SalaryController;
+use App\Http\Controllers\Api\Vacation\VacationController;
 
 
 Route::prefix('auth')->group(function () {
@@ -20,28 +21,15 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-
-    //User Controller
     Route::apiResource('user', UserController::class);
-
-    // General Controllers
-   Route::apiResource('compartment', CompartmentController::class);
-   Route::apiResource('department', DepartmentController::class);
-   Route::apiResource('position', PositionController::class);
-   Route::apiResource('rating', RatingController::class);
-
-   // Employee Controllers
+    Route::apiResource('compartment', CompartmentController::class);
+    Route::apiResource('department', DepartmentController::class);
+    Route::apiResource('position', PositionController::class);
+    Route::apiResource('rating', RatingController::class);
     Route::apiResource('employee', EmployeeController::class);
-
-    //Avans Controllers
     Route::apiResource('avans', AvansController::class);
-
-    //Award Controller
     Route::apiResource('award', AwardController::class);
-
-    //Deduction controller
     Route::apiResource('deduction', DeductionController::class);
-
-    //Salary Controllers
     Route::apiResource('salary', SalaryController::class);
+    Route::apiResource('vacation', VacationController::class);
 });
