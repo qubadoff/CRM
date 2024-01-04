@@ -7,6 +7,7 @@ use App\Http\Requests\General\DepartmentRequest;
 use App\Models\Departments;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Exception;
 
 class DepartmentController extends Controller
 {
@@ -32,11 +33,11 @@ class DepartmentController extends Controller
 
             return response()->json($department);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -63,11 +64,11 @@ class DepartmentController extends Controller
 
             return response()->json(Departments::where('id', $id)->first());
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -76,10 +77,21 @@ class DepartmentController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        Departments::findOrFail($id)->delete();
+        DB::beginTransaction();
 
-        return response()->json([
-            'message' => 'Successfully Deleted !'
-        ]);
+        try {
+            Departments::findOrFail($id)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Successfully Deleted !'
+            ]);
+
+        } catch (Exception $exception)
+        {
+            DB::rollBack();
+            return response()->json($exception);
+        }
     }
 }

@@ -7,7 +7,7 @@ use App\Http\Requests\General\PositionRequest;
 use App\Models\Position;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use PHPUnit\Exception;
 
 class PositionController extends Controller
 {
@@ -33,11 +33,11 @@ class PositionController extends Controller
 
             return response()->json($position);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -64,11 +64,11 @@ class PositionController extends Controller
 
             return response()->json(Position::where('id', $id)->first());
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -77,10 +77,22 @@ class PositionController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        Position::findOrFail($id)->delete();
+        DB::beginTransaction();
 
-        return response()->json([
-            'message' => 'Successfully Deleted !'
-        ]);
+        try {
+            Position::findOrFail($id)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Successfully Deleted !'
+            ]);
+
+        } catch (Exception $exception)
+        {
+            DB::rollBack();
+
+            return response()->json($exception);
+        }
     }
 }

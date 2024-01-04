@@ -7,7 +7,7 @@ use App\Http\Requests\General\SalaryRequest;
 use App\Models\Salary;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use PHPUnit\Exception;
 
 class SalaryController extends Controller
 {
@@ -35,11 +35,11 @@ class SalaryController extends Controller
             return response()->json($salary);
 
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -66,10 +66,10 @@ class SalaryController extends Controller
 
             return response()->json($salary);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -87,11 +87,11 @@ class SalaryController extends Controller
 
             return response()->json(['message' => 'Salary deleted !']);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 }

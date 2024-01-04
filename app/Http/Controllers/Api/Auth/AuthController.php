@@ -7,9 +7,11 @@ use App\Http\Requests\Auth\AuthRegisterRequest;
 use App\Http\Requests\Auth\AuthRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use PHPUnit\Exception;
+
 
 class AuthController extends Controller
 {
@@ -71,10 +73,17 @@ class AuthController extends Controller
                 'expires_in' => $expires_in,
                 'user' => $user,
             ]);
-        } catch (Throwable $throwable) {
+        } catch (Exception $exception) {
             DB::rollBack();
 
-            return response()->json(['error' => $throwable]);
+            return response()->json(['error' => $exception]);
         }
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->tokens()->delete();
+
+        return response()->json(['message' => 'Successfully logged out !']);
     }
 }

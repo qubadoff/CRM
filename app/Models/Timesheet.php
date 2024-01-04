@@ -13,7 +13,12 @@ class Timesheet extends Model
 
     protected $table = 'timesheets';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'compartment_id',
+        'department_id',
+        'user_id',
+        'date_time',
+    ];
 
     protected $guarded = [];
 

@@ -7,7 +7,7 @@ use App\Http\Requests\General\DeductionRequest;
 use App\Models\Deduction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use PHPUnit\Exception;
 
 class DeductionController extends Controller
 {
@@ -34,11 +34,11 @@ class DeductionController extends Controller
 
             return response()->json($deduction);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -65,11 +65,11 @@ class DeductionController extends Controller
 
             return response()->json($deduction);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json(['error' => $throwable]);
+            return response()->json(['error' => $exception]);
         }
     }
 
@@ -88,10 +88,10 @@ class DeductionController extends Controller
 
             return response()->json(['message' => 'Deduction deleted !']);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 }

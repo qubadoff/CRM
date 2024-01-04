@@ -7,7 +7,7 @@ use App\Http\Requests\General\CompartmentRequest;
 use App\Models\Compartment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use PHPUnit\Exception;
 
 class CompartmentController extends Controller
 {
@@ -32,11 +32,11 @@ class CompartmentController extends Controller
 
                 return response()->json($compartment);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -63,11 +63,11 @@ class CompartmentController extends Controller
 
             return response()->json(Compartment::where('id', $id)->first());
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -76,10 +76,21 @@ class CompartmentController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        Compartment::findOrFail($id)->delete();
+        DB::beginTransaction();
 
-        return response()->json([
-            'message' => 'Successfully Deleted !'
-        ]);
+        try {
+            Compartment::findOrFail($id)->delete();
+
+            DB::commit();
+
+            return response()->json(['message' => 'Successfully Deleted !']);
+
+        } catch (Exception $exception)
+        {
+            DB::rollBack();
+
+            return response()->json($exception);
+        }
+
     }
 }

@@ -8,7 +8,7 @@ use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use PHPUnit\Exception;
 
 class UserController extends Controller
 {
@@ -34,11 +34,11 @@ class UserController extends Controller
 
             return response()->json($user);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -65,11 +65,11 @@ class UserController extends Controller
 
             return response()->json($user);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -87,11 +87,11 @@ class UserController extends Controller
 
             return response()->json(['message' => 'User deleted !']);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 }

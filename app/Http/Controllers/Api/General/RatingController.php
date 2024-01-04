@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Api\General;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\RatingRequest;
-use App\Models\Position;
 use App\Models\Rating;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Exception;
+
 class RatingController extends Controller
 {
     /**
@@ -15,9 +16,7 @@ class RatingController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json([
-            'data' => Rating::paginate(15)
-        ]);
+        return response()->json(Rating::paginate(15));
     }
 
     /**
@@ -28,19 +27,16 @@ class RatingController extends Controller
         DB::beginTransaction();
 
         try {
-            if ($data = Rating::create($request->validated()))
-            {
-                DB::commit();
-                return response()->json([
-                    'data' => $data
-                ]);
-            }
-        } catch (\Throwable $throwable)
+            $rating = Rating::create($request->validated());
+
+            DB::commit();
+
+            return response()->json($rating);
+
+        } catch (Exception $exception)
         {
             DB::rollBack();
-            return response()->json([
-                'errors' => $throwable
-            ]);
+            return response()->json($exception);
         }
     }
     /**
@@ -48,9 +44,7 @@ class RatingController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        return response()->json([
-            'data' => Rating::where('id', $id)->first()
-        ]);
+        return response()->json(Rating::where('id', $id)->first());
     }
 
     /**
@@ -61,20 +55,16 @@ class RatingController extends Controller
         DB::beginTransaction();
 
         try {
-            if (Rating::where('id', $id)->update($request->validated()))
-            {
+            $rating = Rating::findOrFail($id)->update($request->validated());
+
                 DB::commit();
-                return response()->json([
-                    'message' => 'Successfully Updated !',
-                    'data' => Rating::where('id', $id)->first()
-                ]);
-            }
-        } catch (\Throwable $throwable)
+
+                return response()->json($rating);
+
+        } catch (Exception $exception)
         {
             DB::rollBack();
-            return response()->json([
-                'errors' => $throwable
-            ]);
+            return response()->json($exception);
         }
     }
 
@@ -83,10 +73,21 @@ class RatingController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        Rating::where('id', $id)->delete();
+        DB::beginTransaction();
 
-        return response()->json([
-            'message' => 'Successfully Deleted !'
-        ]);
+        try {
+            Rating::where('id', $id)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Successfully Deleted !'
+            ]);
+
+        } catch (Exception $exception)
+        {
+            DB::rollBack();
+            return response()->json($exception);
+        }
     }
 }

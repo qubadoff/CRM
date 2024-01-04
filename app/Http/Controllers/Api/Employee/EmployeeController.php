@@ -8,7 +8,7 @@ use App\Http\Requests\General\EmployeeupdateRequest;
 use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use PHPUnit\Exception;
 
 class EmployeeController extends Controller
 {
@@ -57,11 +57,11 @@ class EmployeeController extends Controller
 
                 return response()->json($employee);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -125,11 +125,11 @@ class EmployeeController extends Controller
             );
 
             return response()->json($employeeData);
-        } catch (Throwable $e) {
+        } catch (Exception $exception) {
 
             DB::rollBack();
 
-            return response()->json(['message' => 'Update failed', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Update failed', 'error' => $exception->getMessage()], 500);
         }
     }
 
@@ -144,10 +144,10 @@ class EmployeeController extends Controller
 
             return response()->json(['message' => 'Employee deleted !']);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 }

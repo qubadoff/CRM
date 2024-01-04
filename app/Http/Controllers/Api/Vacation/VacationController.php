@@ -7,7 +7,7 @@ use App\Http\Requests\General\VacationRequest;
 use App\Models\Vacation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Js;
+use PHPUnit\Exception;
 
 class VacationController extends Controller
 {
@@ -34,12 +34,12 @@ class VacationController extends Controller
 
             return response()->json($vacation);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
 
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -66,12 +66,12 @@ class VacationController extends Controller
 
             return response()->json($vacation);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
 
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -90,9 +90,9 @@ class VacationController extends Controller
 
             return response()->json(['message' => 'Vacation delete successfully !']);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 }

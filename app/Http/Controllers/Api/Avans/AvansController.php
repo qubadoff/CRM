@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Api\Avans;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\AvansRequest;
 use App\Models\Avans;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use function Symfony\Component\Translation\t;
+use PHPUnit\Exception;
 
 class AvansController extends Controller
 {
@@ -36,11 +34,11 @@ class AvansController extends Controller
 
             return response()->json($avans);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -67,11 +65,11 @@ class AvansController extends Controller
 
             return response()->json($avans);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -83,16 +81,16 @@ class AvansController extends Controller
         DB::beginTransaction();
 
         try {
-            $avans = Avans::findOrFail($id)->delete();
+            Avans::findOrFail($id)->delete();
 
             DB::commit();
 
             return response()->json(['message' => 'Avans deleted !']);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 }

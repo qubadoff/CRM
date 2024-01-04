@@ -7,7 +7,7 @@ use App\Http\Requests\General\AwardRequest;
 use App\Models\Award;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use PHPUnit\Exception;
 
 class AwardController extends Controller
 {
@@ -34,11 +34,11 @@ class AwardController extends Controller
 
             return response()->json($award);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
 
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 
@@ -65,9 +65,9 @@ class AwardController extends Controller
 
             return response()->json($award);
 
-        } catch (\Throwable $throwable)
+        } catch (Exception $exception)
         {
-            return response()->json( $throwable );
+            return response()->json( $exception );
         }
     }
 
@@ -85,10 +85,10 @@ class AwardController extends Controller
 
             return response()->json(['message' => 'Award deleted !']);
 
-        } catch (Throwable $throwable)
+        } catch (Exception $exception)
         {
             DB::rollBack();
-            return response()->json($throwable);
+            return response()->json($exception);
         }
     }
 }
