@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Award\AwardController;
 use App\Http\Controllers\Api\Deduction\DeductionController;
 use App\Http\Controllers\Api\Salary\SalaryController;
 use App\Http\Controllers\Api\Vacation\VacationController;
+use App\Http\Controllers\Api\Timesheet\TimesheetController;
 
 
 Route::prefix('auth')->group(function () {
@@ -33,4 +34,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('deduction', DeductionController::class);
     Route::apiResource('salary', SalaryController::class);
     Route::apiResource('vacation', VacationController::class);
+    Route::apiResource('timesheet', TimesheetController::class);
 });

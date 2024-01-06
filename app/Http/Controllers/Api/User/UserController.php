@@ -59,11 +59,11 @@ class UserController extends Controller
 
         try {
 
-            $user = User::findOrFail($id)->update($request->validated());
+            User::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json($user);
+            return response()->json(User::findOrFail($id));
 
         } catch (Exception $exception)
         {

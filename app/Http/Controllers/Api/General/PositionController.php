@@ -62,7 +62,7 @@ class PositionController extends Controller
 
             DB::commit();
 
-            return response()->json(Position::where('id', $id)->first());
+            return response()->json(Position::findOrFail($id));
 
         } catch (Exception $exception)
         {

@@ -24,9 +24,7 @@ class AuthController extends Controller
     {
         if (! Auth::guard('api')->attempt($request->validated()))
         {
-            return response()->json([
-                'message' => 'Invalid credentials !'
-            ], 401);
+            return response()->json(['message' => 'Invalid credentials !'], 401);
         }
 
         $user = Auth::user();
@@ -41,10 +39,7 @@ class AuthController extends Controller
             'expires_at' => now()->addMinutes($expires_in),
         ]);
 
-        return response()->json([
-            'token' => $token,
-            'expires_in' => $expires_in,
-            'user' => \auth('api')->user()
+        return response()->json(['token' => $token, 'expires_in' => $expires_in, 'user' => \auth('api')->user()
         ]);
     }
 

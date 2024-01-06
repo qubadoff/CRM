@@ -55,11 +55,11 @@ class RatingController extends Controller
         DB::beginTransaction();
 
         try {
-            $rating = Rating::findOrFail($id)->update($request->validated());
+            Rating::findOrFail($id)->update($request->validated());
 
                 DB::commit();
 
-                return response()->json($rating);
+                return response()->json(Rating::findOrFail($id));
 
         } catch (Exception $exception)
         {

@@ -62,7 +62,7 @@ class DepartmentController extends Controller
 
             DB::commit();
 
-            return response()->json(Departments::where('id', $id)->first());
+            return response()->json(Departments::findOrFail($id));
 
         } catch (Exception $exception)
         {

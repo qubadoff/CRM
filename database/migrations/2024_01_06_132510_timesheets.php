@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('timesheets', function (Blueprint $table) {
+        Schema::create('timesheets', function (Blueprint $table){
             $table->id();
             $table->integer('compartment_id');
-            $table->mediumText('department_id');
-            $table->mediumText('user_id');
-            $table->dateTime('date_time');
+            $table->string('department_id');
+            $table->string('employee_id');
+            $table->string('date_and_time');
             $table->timestamps();
             $table->softDeletes();
         });

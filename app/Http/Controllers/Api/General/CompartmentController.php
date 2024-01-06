@@ -61,7 +61,7 @@ class CompartmentController extends Controller
 
             DB::commit();
 
-            return response()->json(Compartment::where('id', $id)->first());
+            return response()->json(Compartment::findOrFail($id));
 
         } catch (Exception $exception)
         {

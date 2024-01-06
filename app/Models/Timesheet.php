@@ -16,8 +16,8 @@ class Timesheet extends Model
     protected $fillable = [
         'compartment_id',
         'department_id',
-        'user_id',
-        'date_time',
+        'employee_id',
+        'date_and_time',
     ];
 
     protected $guarded = [];

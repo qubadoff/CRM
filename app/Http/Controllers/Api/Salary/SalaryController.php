@@ -60,11 +60,11 @@ class SalaryController extends Controller
 
         try {
 
-            $salary = Salary::findOrFail($id)->update($request->validated());
+            Salary::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json($salary);
+            return response()->json(Salary::findOrFail($id));
 
         } catch (Exception $exception)
         {

@@ -59,11 +59,11 @@ class AvansController extends Controller
 
         try {
 
-            $avans = Avans::findOrFail($id)->update($request->validated());
+            Avans::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json($avans);
+            return response()->json(Avans::findOrFail($id));
 
         } catch (Exception $exception)
         {

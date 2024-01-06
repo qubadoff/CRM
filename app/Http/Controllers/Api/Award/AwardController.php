@@ -59,11 +59,11 @@ class AwardController extends Controller
 
         try {
 
-            $award = Award::findOrFail($id)->update($request->validated());
+            Award::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json($award);
+            return response()->json(Award::findOrFail($id));
 
         } catch (Exception $exception)
         {

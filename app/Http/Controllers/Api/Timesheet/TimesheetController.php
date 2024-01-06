@@ -1,42 +1,49 @@
 <?php
 
-namespace App\Http\Controllers\Api\Vacation;
+namespace App\Http\Controllers\Api\Timesheet;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\General\VacationRequest;
-use App\Models\Vacation;
+use App\Http\Requests\Timesheet\TimesheetRequest;
+use App\Models\Timesheet;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Exception;
 
-class VacationController extends Controller
+class TimesheetController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
     {
-        return response()->json(Vacation::orderBy('id', 'ASC')->paginate(20));
+        return response()->json(Timesheet::paginate(20));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(VacationRequest $request): JsonResponse
+    public function store(TimesheetRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
         try {
 
-            $vacation = Vacation::create($request->validated());
+            $timesheet = Timesheet::create(
+                array_merge($request->validated(),
+                [
+                    'department_id' => json_encode($request->department_id),
+                    'employee_id' => json_encode($request->employee_id),
+                    'date_and_time' => json_encode($request->date_and_time)
+                ])
+            );
 
             DB::commit();
 
-            return response()->json($vacation);
+            return response()->json($timesheet);
 
         } catch (Exception $exception)
         {
-
             DB::rollBack();
 
             return response()->json($exception);
@@ -48,27 +55,26 @@ class VacationController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        return response()->json(Vacation::findOrFail($id));
+        return response()->json(Timesheet::findOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(VacationRequest $request, int $id): JsonResponse
+    public function update(TimesheetRequest $request, int $id): JsonResponse
     {
         DB::beginTransaction();
 
         try {
 
-            Vacation::findOrFail($id)->update($request->validated());
+            Timesheet::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json(Vacation::findOrFail($id));
+            return response()->json(Timesheet::findOrFail($id));
 
         } catch (Exception $exception)
         {
-
             DB::rollBack();
 
             return response()->json($exception);
@@ -84,14 +90,15 @@ class VacationController extends Controller
 
         try {
 
-            Vacation::findOrFail($id)->delete();
+            Timesheet::findOrFail($id)->delete();
 
             DB::commit();
 
-            return response()->json(['message' => 'Vacation delete successfully !']);
+            return response()->json(['message' => 'Timesheet deleted successfully !']);
 
         } catch (Exception $exception)
         {
+            DB::rollBack();
             return response()->json($exception);
         }
     }

@@ -59,11 +59,11 @@ class DeductionController extends Controller
 
         try {
 
-            $deduction = Deduction::findOrFail($id)->update($request->validated());
+            Deduction::findOrFail($id)->update($request->validated());
 
             DB::commit();
 
-            return response()->json($deduction);
+            return response()->json(Deduction::findOrFail($id));
 
         } catch (Exception $exception)
         {
